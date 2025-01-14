@@ -1,0 +1,129 @@
+memory-garden/              # 项目根目录
+├── assets/                 # 静态资源目录
+│   ├── images/            # 图片资源
+│   │   ├── logo/         # logo相关图片
+│   │   ├── icons/        # 图标资源
+│   │   ├── features/     # 功能介绍图片
+│   │   └── backgrounds/  # 背景图片
+│   ├── fonts/            # 字体文件
+│   └── videos/           # 视频资源
+│
+├── styles/                # 样式文件目录
+│   ├── base/             # 基础样式
+│   │   ├── reset.css    # 重置默认样式
+│   │   └── variables.css # CSS变量定义
+│   ├── components/       # 组件样式
+│   │   ├── buttons.css  # 按钮样式
+│   │   ├── cards.css    # 卡片样式
+│   │   └── nav.css      # 导航样式
+│   ├── layouts/          # 布局样式
+│   └── main.css         # 主样式文件
+│
+├── scripts/              # JavaScript文件目录
+│   ├── components/      # 组件脚本
+│   ├── utils/          # 工具函数
+│   └── main.js         # 主脚本文件
+│
+├── pages/               # 页面文件目录
+│   ├── home/           # 首页相关
+│   │   └── index.html  # 首页
+│   ├── features/       # 功能介绍页面
+│   ├── about/          # 关于我们
+│   └── contact/        # 联系页面
+│
+├── vendor/             # 第三方库
+│   ├── aos/           # AOS动画库
+│   └── other-libs/    # 其他库
+│
+└── index.html         # 网站入口文件
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  background-color: #f0f7ff;
+  color: #2d3748;
+}
+
+:root {
+  /* 颜色变量 */
+  --primary-color: #3b82f6;
+  --secondary-color: #60a5fa;
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --bg-light: #f0f7ff;
+  
+  /* 间距变量 */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  
+  /* 边框圆角 */
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 导航相关的其他样式... */
+
+.cta-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  /* 按钮相关的其他样式... */
+}
+
+/* 导入基础样式 */
+@import 'base/reset.css';
+@import 'base/variables.css';
+
+/* 导入组件样式 */
+@import 'components/nav.css';
+@import 'components/buttons.css';
+@import 'components/cards.css';
+
+/* 导入布局样式 */
+@import 'layouts/header.css';
+@import 'layouts/features.css';
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记忆庄园 - 趣味英语单词学习助手</title>
+    <link href="/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/styles/main.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 页面内容 -->
+    
+    <script src="/vendor/aos/aos.js"></script>
+    <script src="/scripts/main.js"></script>
+</body>
+</html>
+
+
+这样的目录结构有以下优点：
+模块化管理，便于维护
+清晰的资源分类
+便于多人协作
+利于代码复用
+便于后期扩展
