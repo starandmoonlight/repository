@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础及高级交互效果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f0ff;
+        }
+        header {
+            background-color: #8272e2;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            margin: 30px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        nav button {
+            width: 250px;
+            height: 400px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #8e80df;
+            color: white;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav button:hover {
+            background-color: #c7a4dc;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>基础及高级交互效果</h1>
+    </header>
+
+    <nav>
+        <button onclick="redirectTo('基础交互效果.html')">基础交互效果</button>
+        <button onclick="redirectTo('高级交互粒子效果.html')">高级交互粒子效果</button>
+        <button onclick="redirectTo('高级交互效果3D变换.html')">高级交互效果3D变换</button>
+    </nav>
+
+    <script>
+        function redirectTo(pageUrl) {
+            window.location.href = pageUrl;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单交互示例</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .input-group label {
+            position: absolute;
+            top: 12px;
+            left: 10px;
+            font-size: 14px;
+            color: #999;
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -8px;
+            left: 8px;
+            font-size: 12px;
+            color: #333;
+            background-color: #fff;
+            padding: 0 4px;
+        }
+        #password-strength, #strength-text {
+            display: none;
+        }
+        #password-strength {
+            height: 5px;
+            width: 100%;
+            background-color: #e0e0e0;
+            margin-top: 5px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        #password-strength div {
+            height: 100%;
+            width: 0;
+            background-color: red;
+            transition: width 0.3s ease-in-out;
+        }
+        #strength-text {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #333;
+        }
+        #email-feedback {
+            font-size: 12px;
+            color: red;
+        }
+        #submit-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        #submit-btn.loading {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="username" placeholder=" " required>
+            <label for="username">用户名</label>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" placeholder=" " required>
+            <label for="password">密码</label>
+            <div id="password-strength"><div></div></div>
+            <div id="strength-text">密码强度：弱</div>
+        </div>
+
+        <div class="input-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">邮箱</label>
+            <div id="email-feedback"></div>
+        </div>
+
+        <button id="submit-btn">提交</button>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.querySelector('#password-strength div');
+        const strengthText = document.getElementById('strength-text');
+        const emailInput = document.getElementById('email');
+        const emailFeedback = document.getElementById('email-feedback');
+        const submitBtn = document.getElementById('submit-btn');
+        const passwordStrengthContainer = document.getElementById('password-strength');
+
+        passwordInput.addEventListener('input', () => {
+            const value = passwordInput.value;
+            let strength = 0;
+
+            passwordStrengthContainer.style.display = value ? 'block' : 'none';
+            strengthText.style.display = value ? 'block' : 'none';
+
+            if (value.length >= 8) strength++;
+            if (/[A-Z]/.test(value)) strength++;
+            if (/[0-9]/.test(value)) strength++;
+            if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+            const width = (strength / 4) * 100;
+            strengthBar.style.width = width + '%';
+            const colors = ['red', 'orange', 'yellow', 'green'];
+            strengthBar.style.backgroundColor = colors[strength - 1] || 'red';
+
+            const strengthLevels = ['弱', '一般', '中等', '强'];
+            strengthText.textContent = '密码强度：' + (strengthLevels[strength - 1] || '弱');
+        });
+
+        emailInput.addEventListener('input', () => {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailPattern.test(emailInput.value)) {
+                emailFeedback.textContent = '邮箱格式正确';
+                emailFeedback.style.color = 'green';
+            } else {
+                emailFeedback.textContent = '请输入有效的邮箱地址';
+                emailFeedback.style.color = 'red';
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            submitBtn.classList.add('loading');
+            submitBtn.textContent = '提交中...';
+            setTimeout(() => {
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = '提交';
+                alert('提交成功！');
+            }, 2000);
+        });
+    </script>
+
+</body>
+</html>

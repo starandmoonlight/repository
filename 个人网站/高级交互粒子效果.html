@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starfield and Particle Effects</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <canvas id="starfield"></canvas>
+    <!-- 鼠标跟随粒子 -->
+    <canvas id="mouseTrail"></canvas>
+    <!-- 粒子网状连线 -->
+    <canvas id="network"></canvas>
+
+    <script>
+        // 星空背景
+        const starCanvas = document.getElementById('starfield');
+        const starCtx = starCanvas.getContext('2d');
+        starCanvas.width = window.innerWidth;
+        starCanvas.height = window.innerHeight;
+
+        const stars = Array.from({ length: 200 }, () => ({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            radius: Math.random() * 1.5,
+            speedX: (Math.random() - 0.5) * 0.2,
+            speedY: (Math.random() - 0.5) * 0.2
+        }));
+
+        function drawStars() {
+            starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            stars.forEach(star => {
+                star.x += star.speedX;
+                star.y += star.speedY;
+                
+                if (star.x < 0 || star.x > starCanvas.width) star.speedX *= -1;
+                if (star.y < 0 || star.y > starCanvas.height) star.speedY *= -1;
+                
+                starCtx.beginPath();
+                starCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                starCtx.fillStyle = `rgba(255, 255, 255, ${Math.random()})`;
+                starCtx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // 粒子跟随鼠标（烟花效果）
+        const trailCanvas = document.getElementById('mouseTrail');
+        const trailCtx = trailCanvas.getContext('2d');
+        trailCanvas.width = window.innerWidth;
+        trailCanvas.height = window.innerHeight;
+
+        let fireworks = [];
+
+        window.addEventListener('mousemove', (e) => {
+            for (let i = 0; i < 20; i++) {
+                fireworks.push({
+                    x: e.clientX,
+                    y: e.clientY,
+                    speedX: (Math.random() - 0.5) * 2,  // 调慢速度
+                    speedY: (Math.random() - 0.5) * 2,  // 调慢速度
+                    alpha: 1,
+                    radius: Math.random() * 3 + 1
+                });
+            }
+        });
+
+        function drawFireworks() {
+            trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+            fireworks = fireworks.filter(p => p.alpha > 0);
+            fireworks.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.alpha -= 0.015;  // 减慢消失速度
+                trailCtx.beginPath();
+                trailCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                trailCtx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                trailCtx.fill();
+            });
+            requestAnimationFrame(drawFireworks);
+        }
+        drawFireworks();
+
+        // 粒子自动连线
+        const networkCanvas = document.getElementById('network');
+        const networkCtx = networkCanvas.getContext('2d');
+        networkCanvas.width = window.innerWidth;
+        networkCanvas.height = window.innerHeight;
+
+        const particles = Array.from({ length: 100 }, () => ({
+            x: Math.random() * networkCanvas.width,
+            y: Math.random() * networkCanvas.height,
+            speedX: (Math.random() - 0.5) * 1,
+            speedY: (Math.random() - 0.5) * 1
+        }));
+
+        function drawNetwork() {
+            networkCtx.clearRect(0, 0, networkCanvas.width, networkCanvas.height);
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if (p.x < 0 || p.x > networkCanvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > networkCanvas.height) p.speedY *= -1;
+
+                networkCtx.beginPath();
+                networkCtx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                networkCtx.fillStyle = '#fff';
+                networkCtx.fill();
+            });
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        networkCtx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / 100})`;
+                        networkCtx.beginPath();
+                        networkCtx.moveTo(particles[i].x, particles[i].y);
+                        networkCtx.lineTo(particles[j].x, particles[j].y);
+                        networkCtx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawNetwork);
+        }
+        drawNetwork();
+    </script>
+</body>
+</html>

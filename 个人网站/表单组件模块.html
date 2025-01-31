@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单组件</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f0ff;
+        }
+        header {
+            background-color: #8272e2;
+            color: white;
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            margin: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        nav button {
+            width: 250px;
+            height: 400px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #8e80df;
+            color: white;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav button:hover {
+            background-color: #c7a4dc;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>表单组件</h1>
+    </header>
+
+    <nav>
+        <button onclick="redirectTo('界面组件之表单交互.html')">表单交互</button>
+        <button onclick="redirectTo('界面组件之弹窗层级.html')">弹窗层级</button>
+    </nav>
+
+    <script>
+        function redirectTo(pageUrl) {
+            window.location.href = pageUrl;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Flappy Bird</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #333;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        canvas {
+            border: 2px solid white;
+        }
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+        #currentScore {
+            font-size: 2.5em;
+            color: #f4d03f;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin: 5px 0;
+        }
+        #bestScore {
+            font-size: 1.2em;
+            color: #2ecc71;
+        }
+        #startButton {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #2ecc71;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        #startButton:hover {
+            background-color: #27ae60;
+        }
+        #instructions {
+            color: white;
+            margin-top: 10px;
+            text-align: center;
+        }
+        /* 记分板样式 */
+        .score-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+        }
+        .score-value {
+            font-size: 2em;
+            color: #f1c40f;
+            font-weight: bold;
+            text-align: center;
+        }
+        .score-panel-title {
+            color: #2ecc71;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="score-container">
+        <div id="currentScore">得分: 0</div>
+        <div id="bestScore">最高分: 0</div>
+    </div>
+    <canvas id="gameCanvas" width="320" height="480"></canvas>
+    <button id="startButton">开始游戏</button>
+    <div id="instructions">按空格键或点击屏幕来跳跃</div>
+
+    <!-- 实时记分板 -->
+    <div class="score-panel">
+        <div class="score-panel-title">当前得分</div>
+        <div id="scoreHistory" class="score-value">0</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const currentScoreDisplay = document.getElementById('currentScore');
+        const bestScoreDisplay = document.getElementById('bestScore');
+        const startButton = document.getElementById('startButton');
+
+        // 游戏变量
+        let bird = {
+            x: 50,
+            y: 200,
+            velocity: 0,
+            radius: 15
+        };
+
+        let pipes = [];
+        let score = 0;
+        let bestScore = parseInt(localStorage.getItem('flappyBirdBestScore')) || 0;
+        let gameOver = true;
+        let gameStarted = false;
+        const gravity = 0.15;
+        const jump = -4;
+        const pipeWidth = 50;
+        const pipeGap = 200;
+        const pipeSpeed = 1;
+        const pipeSpawnInterval = 250;
+
+        // 更新得分显示
+        function updateScoreHistory(newScore) {
+            document.getElementById('scoreHistory').textContent = newScore;
+        }
+
+        // 更新分数显示
+        function updateScoreDisplay() {
+            currentScoreDisplay.textContent = `得分: ${score}`;
+            bestScoreDisplay.textContent = `最高分: ${bestScore}`;
+            
+            currentScoreDisplay.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                currentScoreDisplay.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // 初始化/重置游戏
+        function resetGame() {
+            bird.y = 200;
+            bird.velocity = 0;
+            pipes = [];
+            score = 0;
+            gameOver = false;
+            // 重置得分显示
+            document.getElementById('scoreHistory').textContent = '0';
+            updateScoreDisplay();
+        }
+
+        // 开始按钮点击事件
+        startButton.addEventListener('click', function() {
+            if (gameOver || !gameStarted) {
+                resetGame();
+                gameStarted = true;
+                gameOver = false;
+                score = 0;
+                updateScoreDisplay();
+                startButton.textContent = "重新开始";
+            }
+        });
+
+        // 游戏控制
+        function handleJump(e) {
+            if (e.type === 'keydown' && e.code !== 'Space') return;
+            if (!gameStarted || gameOver) return;
+            bird.velocity = jump;
+        }
+
+        document.addEventListener('keydown', handleJump);
+        canvas.addEventListener('click', handleJump);
+
+        // 创建新管道
+        function createPipe() {
+            const minHeight = 50;
+            const maxHeight = canvas.height - pipeGap - minHeight;
+            const height = Math.floor(Math.random() * (maxHeight - minHeight) / 2) + minHeight;
+
+            pipes.push({
+                x: canvas.width,
+                topHeight: height,
+                passed: false
+            });
+        }
+
+        // 更新游戏状态
+        function update() {
+            if (gameOver || !gameStarted) return;
+
+            bird.velocity += gravity;
+            bird.y += bird.velocity;
+
+            if (bird.velocity > 5) {
+                bird.velocity = 5;
+            }
+
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - pipeSpawnInterval) {
+                createPipe();
+            }
+
+            pipes.forEach(pipe => {
+                pipe.x -= pipeSpeed;
+
+                if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
+                    pipe.passed = true;
+                    score++;
+                    
+                    // 实时更新得分显示
+                    updateScoreHistory(score);
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        localStorage.setItem('flappyBirdBestScore', bestScore.toString());
+                    }
+                    updateScoreDisplay();
+                }
+
+                if (bird.x + bird.radius - 2 > pipe.x && 
+                    bird.x - bird.radius + 2 < pipe.x + pipeWidth) {
+                    if (bird.y - bird.radius + 2 < pipe.topHeight || 
+                        bird.y + bird.radius - 2 > pipe.topHeight + pipeGap) {
+                        gameOver = true;
+                        if (score > bestScore) {
+                            bestScore = score;
+                            localStorage.setItem('flappyBirdBestScore', bestScore.toString());
+                        }
+                    }
+                }
+            });
+
+            pipes = pipes.filter(pipe => pipe.x > -pipeWidth);
+
+            if (bird.y + bird.radius > canvas.height - 5 || bird.y - bird.radius < 5) {
+                gameOver = true;
+            }
+        }
+
+        // 绘制游戏画面
+        function draw() {
+            ctx.fillStyle = '#70c5ce';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#f4d03f';
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(bird.x + 5, bird.y - 5, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.moveTo(bird.x + 12, bird.y);
+            ctx.lineTo(bird.x + 20, bird.y);
+            ctx.lineTo(bird.x + 12, bird.y + 4);
+            ctx.fill();
+
+            pipes.forEach(pipe => {
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+                ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, 
+                           pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+            });
+
+            if (!gameStarted || gameOver) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '30px Arial';
+                ctx.textAlign = 'center';
+                if (!gameStarted) {
+                    ctx.fillText('点击开始按钮开始游戏', canvas.width / 2, canvas.height / 2);
+                } else if (gameOver) {
+                    ctx.fillText('游戏结束!', canvas.width / 2, canvas.height / 2);
+                    ctx.font = '20px Arial';
+                    ctx.fillText(`最终得分: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+                }
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        updateScoreDisplay();
+        gameLoop();
+    </script>
+</body>
+</html>

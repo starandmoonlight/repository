@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="个人网页 - 高级简约设计">
+    <title>个人主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            position: relative;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        header.scrolled h1,
+        header.scrolled p {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            z-index: 20;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #667eea;
+        }
+
+        section {
+            padding: 50px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .skills,
+        .projects {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        /* 修改技能卡片样式 */
+        .skills div {
+            flex: 0 0 30%;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        /* 新增项目卡片链接样式 */
+        .project-link {
+            display: block;
+            flex: 0 0 30%;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 20px;
+        }
+
+        .projects .project-link div {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .skills div:hover,
+        .projects .project-link:hover div {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#hero" data-target="hero">首页</a>
+        <a href="#about" data-target="about">关于我</a>
+        <a href="#skills" data-target="skills">技能</a>
+        <a href="#projects" data-target="projects">项目</a>
+    </nav>
+
+    <header id="hero">
+        <h1>提灯探星</h1>
+        <p>软件开发工程师 | 热爱创新与技术</p>
+    </header>
+
+    <section id="about">
+        <h2>关于我</h2>
+        <p>我是提灯探星，一名软件开发工程师，擅长构建现代化的Web应用程序。我喜欢学习新技术并将它们应用到实际项目中。</p>
+    </section>
+
+    <section id="skills">
+        <h2>技能</h2>
+        <div class="skills">
+            <div>
+                <h3>前端开发</h3>
+                <p>熟悉HTML、CSS、JavaScript及React框架。</p>
+            </div>
+            <div>
+                <h3>后端开发</h3>
+                <p>掌握Node.js、Express及数据库管理。</p>
+            </div>
+            <div>
+                <h3>工具链</h3>
+                <p>熟悉Git、Webpack及敏捷开发流程。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>项目</h2>
+        <div class="projects">
+            <a href="经典游戏模块.html" target="_blank" class="project-link">
+                <div>
+                    <h3>经典小游戏</h3>
+                    <p>设计并开发了经典游戏。</p>
+                </div>
+            </a>
+            <a href="基础及高级交互效果模块.html" target="_blank" class="project-link">
+                <div>
+                    <h3>基础及其高级交互效果</h3>
+                    <p>提升界面的可感知性与响应性，通过复杂动效实现深层次的用户体验。</p>
+                </div>
+            </a>
+            <a href="表单组件模块.html" target="_blank" class="project-link">
+                <div>
+                    <h3>表单组件设计</h3>
+                    <p>用户与系统进行数据交互，功能性与用户体验相互结合。</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>联系我：<a href="mailto:starscapes@163.com">starscapes@163.com</a></p>
+        <p>&copy; 2025 提灯探星的个人主页</p>
+    </footer>
+
+    <script>
+        const navLinks = document.querySelectorAll('nav a');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = e.target.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // 添加滚动虚化效果
+        const header = document.getElementById('hero');
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            if (scrollPosition > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

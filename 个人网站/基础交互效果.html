@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Smart Buttons</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f5f7fa;
+            margin: 0;
+        }
+
+        .button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #5178fb, #49b4f8);
+        }
+
+        .submit-btn.loading {
+            background: linear-gradient(45deg, #88aeff, #c3e1fb);
+            pointer-events: none;
+        }
+
+        .submit-btn.loading::after {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 3px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .submit-btn.success {
+            background: linear-gradient(45deg, #3db575, #46cdab);
+        }
+
+        .submit-btn.error {
+            background: linear-gradient(45deg, #ff6464, #f1524f);
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .upload-btn {
+            background: linear-gradient(45deg, #4CAF50, #4dcbab);
+            width: 220px;
+            height: 60px;
+            position: relative;
+        }
+
+        .upload-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #acd6ad, #cfe4d0);
+            width: 0;
+            border-radius: 0 0 8px 8px;
+            transition: width 0.3s ease;
+        }
+
+        .upload-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(45deg, #ff5a5a, #ef5350);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 25px 40px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+
+        .modal.show {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
+</head>
+<body>
+
+<button class="button submit-btn" id="submitBtn">提交表单</button>
+
+<button class="button upload-btn" id="uploadBtn">
+    <span class="upload-text" id="uploadText">上传文件</span>
+    <div class="upload-progress-bar" id="uploadProgressBar"></div>
+</button>
+
+<button class="button confirm-btn" id="confirmBtn">删除数据</button>
+
+<div class="modal" id="confirmModal">
+    <p>此操作将永久删除所选数据，确定要继续吗？</p>
+    <button onclick="confirmAction()">确定</button>
+    <button onclick="closeModal()">取消</button>
+</div>
+
+<script>
+    const submitBtn = document.getElementById('submitBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const uploadText = document.getElementById('uploadText');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const confirmModal = document.getElementById('confirmModal');
+
+    submitBtn.addEventListener('click', function () {
+        submitBtn.classList.add('loading');
+        submitBtn.textContent = '提交中...';
+        setTimeout(() => {
+            submitBtn.classList.remove('loading');
+            const isSuccess = Math.random() > 0.5;
+            submitBtn.classList.add(isSuccess ? 'success' : 'error');
+            submitBtn.textContent = isSuccess ? '提交成功' : '提交失败';
+            setTimeout(() => {
+                submitBtn.classList.remove('success', 'error');
+                submitBtn.textContent = '提交表单';
+            }, 2000);
+        }, 2000);
+    });
+
+    uploadBtn.addEventListener('click', function () {
+        let progress = 0;
+        uploadText.textContent = '上传中 0%';
+        const interval = setInterval(() => {
+            if (progress >= 100) {
+                clearInterval(interval);
+                uploadText.textContent = '上传完成';
+            } else {
+                progress += 10;
+                uploadProgressBar.style.width = progress + '%';
+                uploadText.textContent = `上传中 ${progress}%`;
+            }
+        }, 300);
+    });
+
+    confirmBtn.addEventListener('click', function () {
+        confirmModal.classList.add('show');
+    });
+
+    function closeModal() {
+        confirmModal.classList.remove('show');
+    }
+
+    function confirmAction() {
+        alert('数据已删除');
+        closeModal();
+    }
+</script>
+
+</body>
+</html>
